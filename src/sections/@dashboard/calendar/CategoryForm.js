@@ -40,13 +40,13 @@ const getInitialValues = (event, range) => {
 
 // ----------------------------------------------------------------------
 
-CalendarForm.propTypes = {
+CategoryForm.propTypes = {
   event: PropTypes.object,
   range: PropTypes.object,
   onCancel: PropTypes.func,
 };
 
-export default function CalendarForm({ event, range, onCancel }) {
+export default function CategoryForm({ event, range, onCancel }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();

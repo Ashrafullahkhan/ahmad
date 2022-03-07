@@ -125,18 +125,13 @@ export default function Testing() {
   return (
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Schools config"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'List' },
-          ]}
-        />
         <Grid container>
-          <Grid xs={5} md={4} sx={{ marginBottom: 4 }}>
+          <Grid lg={10} sm={10} md={10}>
+            <h1>School Config</h1>
+          </Grid>
+          <Grid sx={{ marginBottom: 3 }} item xs={7} md={9}>
             <Box>
-              <FormControl fullWidth>
+              <FormControl>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
                   Schools
                 </InputLabel>
@@ -154,10 +149,8 @@ export default function Testing() {
               </FormControl>
             </Box>
           </Grid>
-          <Grid xs={5} md={8}>
-            <Button style={{ float: 'right' }} variant="contained">
-              Submit Validation
-            </Button>
+          <Grid item xs={5} md={3}>
+            <Button variant="contained">Submit Validation</Button>
           </Grid>
         </Grid>
         <Card sx={{ marginBottom: 7 }}>

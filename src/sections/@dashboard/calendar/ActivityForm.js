@@ -5,49 +5,25 @@ import { isBefore } from 'date-fns';
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 // form
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 // @mui
-import {
-  Box,
-  Stack,
-  Button,
-  Tooltip,
-  Typography,
-  InputAdornment,
-  IconButton,
-  DialogActions,
-  Grid,
-} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Box, Stack, Button, Tooltip, TextField, IconButton, DialogActions, Grid } from '@mui/material';
+
 // redux
 import { useDispatch } from '../../../redux/store';
 import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/calendar';
 import { fData } from '../../../utils/formatNumber';
+
 // components
 import Iconify from '../../../components/Iconify';
 
-import { FormProvider, RHFTextField, RHFUploadAvatar, RHFCoverAvatar } from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFUploadAvatar, RHFCheckbox } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
-const SOCIAL_LINKS = [
-  {
-    value: 'facebookLink',
-    icon: <Iconify icon={'eva:facebook-fill'} width={24} height={24} />,
-  },
-  {
-    value: 'instagramLink',
-    icon: <Iconify icon={'ant-design:instagram-filled'} width={24} height={24} />,
-  },
-  {
-    value: 'linkedinLink',
-    icon: <Iconify icon={'eva:linkedin-fill'} width={24} height={24} />,
-  },
-  {
-    value: 'twitterLink',
-    icon: <Iconify icon={'eva:twitter-fill'} width={24} height={24} />,
-  },
-];
 
 const getInitialValues = (event, range) => {
   const _event = {
@@ -68,13 +44,13 @@ const getInitialValues = (event, range) => {
 
 // ----------------------------------------------------------------------
 
-CalendarForm.propTypes = {
+ActivityForm.propTypes = {
   event: PropTypes.object,
   range: PropTypes.object,
   onCancel: PropTypes.func,
 };
 
-export default function CalendarForm({ event, range, onCancel }) {
+export default function ActivityForm({ event, range, onCancel }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
@@ -155,32 +131,54 @@ export default function CalendarForm({ event, range, onCancel }) {
   );
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid sx={{ marginTop: 1 }} container spacing={3}>
-        <Grid item md={6} xs={12} sx={{ marginLeft: 4 }}>
-          <RHFCoverAvatar name="avatarUrl" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
-          <RHFUploadAvatar
-            sx={{ marginTop: 4 }}
-            name="avatarUrl"
-            accept="image/*"
-            maxSize={3145728}
-            onDrop={handleDrop}
-          />
+      <Stack spacing={1} sx={{ p: 3 }}>
+        <RHFTextField name="title" label="Name" />
+
+        <RHFTextField name="description" label="Description" multiline rows={4} />
+
+        <Grid container>
+          <Grid sx={{ marginRight: 3 }} item md={6} lg={5} xs={12}>
+            <RHFTextField name="duration" label="Duration" />
+          </Grid>
+          <Grid item lg={5} md={6} xs={12}>
+            <RHFTextField name="price" label="Price" />
+          </Grid>
         </Grid>
-        <Grid item md={5} xs={12} sx={{ p: 3, marginLeft: 3 }}>
-          <RHFTextField name="title" label="Name" />
-          <RHFTextField name="description" label="Address" />
-          <RHFTextField name="description" label="Director" />
-          {SOCIAL_LINKS.map((link) => (
-            <RHFTextField
-              key={link.value}
-              name={link.value}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
-              }}
+
+        <Controller
+          name="start"
+          control={control}
+          render={({ field }) => (
+            <MobileDateTimePicker
+              {...field}
+              label="Start date"
+              inputFormat="dd/MM/yyyy hh:mm a"
+              renderInput={(params) => <TextField {...params} fullWidth />}
             />
-          ))}
-        </Grid>
-      </Grid>
+          )}
+        />
+
+        <Controller
+          name="end"
+          control={control}
+          render={({ field }) => (
+            <MobileDateTimePicker
+              {...field}
+              label="End date"
+              inputFormat="dd/MM/yyyy hh:mm a"
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  error={!!isDateError}
+                  helperText={isDateError && 'End date must be later than start date'}
+                />
+              )}
+            />
+          )}
+        />
+      </Stack>
+
       <DialogActions>
         {!isCreating && (
           <Tooltip title="Delete Event">

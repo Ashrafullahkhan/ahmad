@@ -70,7 +70,7 @@ export default function GeneralApp() {
             </Button>
           </Grid>
         </Grid>
-        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
+        <DialogAnimate maxWidht={'md'} open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? 'Edit School' : 'Add School'}</DialogTitle>
 
           <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />

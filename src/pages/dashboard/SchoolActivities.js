@@ -19,14 +19,19 @@ import {
   TableContainer,
   TablePagination,
   Grid,
+  DialogTitle,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { DialogAnimate } from '../../components/animate';
+import useResponsive from '../../hooks/useResponsive';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // _mock_
 import { _userList } from '../../_mock';
 // components
+import { useDispatch, useSelector } from '../../redux/store';
+import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
 import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Iconify from '../../components/Iconify';
@@ -34,10 +39,17 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
+import { ActivityForm } from '../../sections/@dashboard/calendar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
-
+const selectedEventSelector = (state) => {
+  const { events, selectedEventId } = state.calendar;
+  if (selectedEventId) {
+    return events.find((_event) => _event.id === selectedEventId);
+  }
+  return null;
+};
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'company', label: 'Company', alignRight: false },
@@ -52,6 +64,13 @@ const TABLE_HEAD = [
 export default function SchoolWorkers() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
+  const dispatch = useDispatch();
+
+  const isDesktop = useResponsive('up', 'sm');
+
+  const selectedEvent = useSelector(selectedEventSelector);
+
+  const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
 
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
@@ -89,6 +108,16 @@ export default function SchoolWorkers() {
       newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
     setSelected(newSelected);
+  };
+  const handleAddEvent = () => {
+    dispatch(openModal());
+  };
+  const handleSelectEvent = (arg) => {
+    dispatch(selectEvent(arg.event.id));
+  };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -130,23 +159,22 @@ export default function SchoolWorkers() {
               </Link>
             </Button>
           </Grid>
-          <Grid item xs={7} sm={4} md={4}>
+          <Grid item xs={6} sm={7} md={9}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Activity
             </Typography>
           </Grid>
-          <Grid item xs={3} sm={6} md={6}>
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
+          <Grid item xs={4} sm={3} md={2}>
+            <Button variant="contained" onClick={handleAddEvent} startIcon={<Iconify icon={'eva:plus-fill'} />}>
               Add New
             </Button>
           </Grid>
         </Grid>
+        <DialogAnimate maxWidht={'sm'} open={isOpenModal} onClose={handleCloseModal}>
+          <DialogTitle>{selectedEvent ? 'Edit Activity' : 'Add Activity'}</DialogTitle>
 
+          <ActivityForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
+        </DialogAnimate>
         <Card>
           <UserListToolbar
             numSelected={selected.length}
@@ -203,7 +231,11 @@ export default function SchoolWorkers() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu
+                            onClick={handleAddEvent}
+                            onDelete={() => handleDeleteUser(id)}
+                            userName={name}
+                          />
                         </TableCell>
                       </TableRow>
                     );
