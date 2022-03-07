@@ -19,11 +19,8 @@ import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
 //
-import Searchbar from './Searchbar';
+
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
-import ContactsPopover from './ContactsPopover';
-import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
 
@@ -82,21 +79,17 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
             <Iconify icon="eva:menu-2-fill" />
           </IconButtonAnimate>
         )}
-        <IconButton>
-          <Link to="/dashboard/app">{icon}</Link>
-        </IconButton>
 
-        <Searchbar />
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <Button>Year : 2022</Button>
-          <Button>
-            <Link to="/dashboard/testing">New Year</Link>
+          <Button variant="contained">Year : 2022</Button>
+          <Button variant="contained">
+            <Link to="/dashboard/testing" style={{ textDecoration: 'none', color: 'white' }}>
+              New Year
+            </Link>
           </Button>
 
-          <NotificationsPopover />
-          <ContactsPopover />
           <AccountPopover />
         </Stack>
       </Toolbar>

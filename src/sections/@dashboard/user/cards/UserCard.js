@@ -82,9 +82,7 @@ export default function UserCard({ user }) {
         <OverlayStyle />
         <Image src={cover} alt={cover} ratio="16/9" />
       </Box>
-      <Box sx={{ float: 'right', zIndex: 9999 }}>
-        <MoreMenuButton />
-      </Box>
+
       <Typography variant="subtitle1" sx={{ mt: 6 }}>
         {name}
       </Typography>

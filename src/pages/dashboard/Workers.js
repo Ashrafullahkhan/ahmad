@@ -1,11 +1,13 @@
 import { sentenceCase } from 'change-case';
 import { useState } from 'react';
-import { Link as RouterLink, Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import * as React from 'react';
 
 // @mui
 import { useTheme } from '@mui/material/styles';
+
 import {
+  Grid,
   Card,
   Table,
   Avatar,
@@ -18,14 +20,20 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  Grid,
+  DialogTitle,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
+import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
+import { DialogAnimate } from '../../components/animate';
+import { useDispatch, useSelector } from '../../redux/store';
+import { WorkerForm } from '../../sections/@dashboard/calendar';
+
 // _mock_
 import { _userList } from '../../_mock';
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../components/hook-form';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
@@ -48,10 +56,21 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
-
-export default function SchoolWorkers() {
+const selectedEventSelector = (state) => {
+  const { events, selectedEventId } = state.calendar;
+  if (selectedEventId) {
+    return events.find((_event) => _event.id === selectedEventId);
+  }
+  return null;
+};
+export default function Workers() {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const { themeStretch } = useSettings();
+
+  const selectedEvent = useSelector(selectedEventSelector);
+
+  const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
 
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
@@ -60,6 +79,17 @@ export default function SchoolWorkers() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleAddEvent = () => {
+    dispatch(openModal());
+  };
+  const handleSelectEvent = (arg) => {
+    dispatch(selectEvent(arg.event.id));
+  };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
+  };
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -122,31 +152,28 @@ export default function SchoolWorkers() {
   return (
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Grid container spacing={3}>
-          <Grid item xs={2} sm={2} md={1}>
-            <Button variant="contained">
-              <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
-                Back
-              </Link>
-            </Button>
+        <Grid container sx={{ marginBottom: 5 }}>
+          <Grid item xs={7} md={8}>
+            <h1>Workers</h1>
           </Grid>
-          <Grid item xs={7} sm={4} md={4}>
-            <Typography variant="h4" sx={{ mb: 5 }}>
-              Activity
-            </Typography>
-          </Grid>
-          <Grid item xs={3} sm={6} md={6}>
+
+          <Grid item xs={5} md={4}>
             <Button
+              style={{ float: 'right' }}
               variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
+              startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
+              onClick={handleAddEvent}
             >
               Add New
             </Button>
           </Grid>
         </Grid>
 
+        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
+          <DialogTitle>{selectedEvent ? 'Edit Worker' : 'Add Worker'}</DialogTitle>
+
+          <WorkerForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
+        </DialogAnimate>
         <Card>
           <UserListToolbar
             numSelected={selected.length}
@@ -203,7 +230,11 @@ export default function SchoolWorkers() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu
+                            onDelete={() => handleDeleteUser(id)}
+                            userName={name}
+                            onClick={handleAddEvent}
+                          />
                         </TableCell>
                       </TableRow>
                     );

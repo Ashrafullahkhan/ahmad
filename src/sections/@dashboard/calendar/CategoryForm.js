@@ -17,7 +17,7 @@ import { fData } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/Iconify';
 
-import { FormProvider, RHFTextField, RHFUploadAvatar, RHFSwitch } from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFUploadAvatar, RHFCheckbox } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -40,13 +40,13 @@ const getInitialValues = (event, range) => {
 
 // ----------------------------------------------------------------------
 
-WorkerForm.propTypes = {
+CalendarForm.propTypes = {
   event: PropTypes.object,
   range: PropTypes.object,
   onCancel: PropTypes.func,
 };
 
-export default function WorkerForm({ event, range, onCancel }) {
+export default function CalendarForm({ event, range, onCancel }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
@@ -130,10 +130,21 @@ export default function WorkerForm({ event, range, onCancel }) {
       <Stack spacing={3} sx={{ p: 3 }}>
         <RHFTextField name="title" label="Name" />
 
-        <RHFTextField name="description" label="Email" />
+        <RHFCheckbox name="meal" label="Is Meal" />
 
-        <RHFTextField name="description" label="Contact" />
-        <RHFTextField name="description" label="SSN" />
+        <Typography
+          variant="caption"
+          sx={{
+            mt: 2,
+            mx: 'auto',
+            display: 'block',
+            textAlign: 'center',
+            color: 'text.secondary',
+          }}
+        >
+          Upload Image
+        </Typography>
+        <RHFUploadAvatar name="avatarUrl" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
       </Stack>
 
       <DialogActions>

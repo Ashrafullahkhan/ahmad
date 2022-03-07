@@ -78,7 +78,10 @@ export default function Router() {
         { path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
         { path: 'testing', element: <Testing /> },
+        { path: 'search', element: <Search /> },
         { path: 'analytics', element: <GeneralAnalytics /> },
+        { path: 'category', element: <Category /> },
+        { path: 'workers', element: <Workers /> },
 
         { path: 'booking', element: <GeneralBooking /> },
 
@@ -111,7 +114,7 @@ export default function Router() {
         {
           path: 'chat',
           children: [
-            { element: <Chat />, index: true },
+            { element: <Navigate to="/dashboard/chat/lucian.obrien" replace />, index: true },
             { path: 'new', element: <Chat /> },
             { path: ':conversationKey', element: <Chat /> },
           ],
@@ -161,6 +164,9 @@ const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralA
 
 const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
+const Search = Loadable(lazy(() => import('../pages/dashboard/Search')));
+const Category = Loadable(lazy(() => import('../pages/dashboard/Category')));
+const Workers = Loadable(lazy(() => import('../pages/dashboard/Workers')));
 const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));

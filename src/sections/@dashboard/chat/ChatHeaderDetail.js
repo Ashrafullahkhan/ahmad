@@ -33,10 +33,6 @@ export default function ChatHeaderDetail({ participants }) {
       {isGroup ? <GroupAvatar participants={participants} /> : <OneAvatar participants={participants} />}
 
       <Box sx={{ flexGrow: 1 }} />
-
-      <IconButton>
-        <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
-      </IconButton>
     </RootStyle>
   );
 }

@@ -18,6 +18,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  Grid,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -121,14 +122,11 @@ export default function SchoolWorkers() {
   return (
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Kids"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'School', href: PATH_DASHBOARD.user.root },
-            { name: 'Kids' },
-          ]}
-          action={
+        <Grid container spacing={3} sx={{ marginBottom: 5, marginLeft: 3 }}>
+          <Grid lg={10} md={8} xs={6}>
+            <h1>Kids</h1>
+          </Grid>
+          <Grid lg={2} md={4} xs={6}>
             <Button
               variant="contained"
               component={RouterLink}
@@ -137,8 +135,8 @@ export default function SchoolWorkers() {
             >
               Add New
             </Button>
-          }
-        />
+          </Grid>
+        </Grid>
 
         <Card>
           <UserListToolbar

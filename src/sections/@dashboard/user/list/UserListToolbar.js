@@ -38,7 +38,6 @@ export default function UserListToolbar({ tablename, numSelected, filterName, on
         }),
       }}
     >
-      <h1>{tablename}</h1>
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
@@ -57,20 +56,6 @@ export default function UserListToolbar({ tablename, numSelected, filterName, on
             ),
           }}
         />
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={onDeleteUsers}>
-            <Iconify icon={'eva:trash-2-outline'} />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon={'ic:round-filter-list'} />
-          </IconButton>
-        </Tooltip>
       )}
     </RootStyle>
   );

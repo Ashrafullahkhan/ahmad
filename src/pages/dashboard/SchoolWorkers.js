@@ -1,6 +1,6 @@
 import { sentenceCase } from 'change-case';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Link } from 'react-router-dom';
 import * as React from 'react';
 
 // @mui
@@ -11,7 +11,6 @@ import {
   Card,
   Table,
   Avatar,
-  Button,
   Checkbox,
   TableRow,
   TableBody,
@@ -20,9 +19,11 @@ import {
   Typography,
   TableContainer,
   TablePagination,
-  DialogTitle,
+  Switch,
+  Button,
 } from '@mui/material';
 // routes
+
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -39,7 +40,7 @@ import Label from '../../components/Label';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+
 // sections
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
 
@@ -67,10 +68,6 @@ export default function SchoolWorkers() {
   const dispatch = useDispatch();
   const { themeStretch } = useSettings();
 
-  const selectedEvent = useSelector(selectedEventSelector);
-
-  const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
-
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -78,17 +75,6 @@ export default function SchoolWorkers() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleAddEvent = () => {
-    dispatch(openModal());
-  };
-  const handleSelectEvent = (arg) => {
-    dispatch(selectEvent(arg.event.id));
-  };
-
-  const handleCloseModal = () => {
-    dispatch(closeModal());
-  };
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -152,34 +138,20 @@ export default function SchoolWorkers() {
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container spacing={3}>
-          <Grid item xs={7} md={8}>
-            <HeaderBreadcrumbs
-              heading="Workers"
-              links={[
-                { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                { name: 'Schools', href: PATH_DASHBOARD.user.root },
-                { name: 'Workers' },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={5} md={4}>
-            <Button
-              style={{ float: 'right' }}
-              variant="contained"
-              startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
-              onClick={handleAddEvent}
-            >
-              Add New
+          <Grid item xs={2} sm={2} md={1}>
+            <Button variant="contained">
+              <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
+                Back
+              </Link>
             </Button>
+          </Grid>
+          <Grid item xs={10} sm={10} md={11}>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Workers
+            </Typography>
           </Grid>
         </Grid>
 
-        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Worker' : 'Add Worker'}</DialogTitle>
-
-          <WorkerForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
-        </DialogAnimate>
         <Card>
           <UserListToolbar
             numSelected={selected.length}
@@ -227,12 +199,7 @@ export default function SchoolWorkers() {
                         <TableCell align="left">{role}</TableCell>
                         <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
                         <TableCell align="left">
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'banned' && 'error') || 'success'}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
+                          <Switch defaultChecked size="small" />
                         </TableCell>
 
                         <TableCell align="right">

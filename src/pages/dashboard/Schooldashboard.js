@@ -1,59 +1,44 @@
-import { Container, Grid, Typography } from '@mui/material';
-
+import { Container, Grid, Typography, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import { AnalyticsWidgetSummary } from '../../sections/@dashboard/general/analytics';
+import { BookingWidgetSummary } from '../../sections/@dashboard/general/booking';
+import { BookingIllustration, CheckInIllustration, CheckOutIllustration } from '../../assets';
 
 export default function Schooldashboard() {
   const { themeStretch } = useSettings();
   return (
     <Page title="General: Analytics">
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Cambridge Secondary High School
-        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={2} sm={2} md={1}>
+            <Button variant="contained">
+              <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
+                Back
+              </Link>
+            </Button>
+          </Grid>
+          <Grid item xs={10} sm={10} md={11}>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Cambridge Secondary High School
+            </Typography>
+          </Grid>
+        </Grid>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
-            <AnalyticsWidgetSummary
-              title="Kids"
-              leftsubtitle="Total kids"
-              rightsubtitle="Register Kids"
-              leftsubtitlecount={2000}
-              rightsubtitlecount={4000}
-              icon={'ant-design:android-filled'}
-            />
+            <BookingWidgetSummary title="Total Kids" total={714000} icon={<BookingIllustration />} />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
-            <AnalyticsWidgetSummary
-              title="Parents"
-              leftsubtitle="Male Kids"
-              rightsubtitle="Female Kids"
-              leftsubtitlecount={9000}
-              rightsubtitlecount={80000}
-              color="warning"
-              icon={'ant-design:windows-filled'}
-            />
+            <BookingWidgetSummary title="Total Workers" total={311000} icon={<CheckInIllustration />} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <AnalyticsWidgetSummary
-              title="Activities"
-              leftsubtitle="Total Activities"
-              leftsubtitlecount="3000"
-              color="error"
-              icon={'ant-design:bug-filled'}
-            />
+            <BookingWidgetSummary title="Activities" total={124000} icon={<CheckOutIllustration />} />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
-            <AnalyticsWidgetSummary
-              title="Workers"
-              leftsubtitle="Total Workers"
-              leftsubtitlecount={4000}
-              color="info"
-              icon={'ant-design:apple-filled'}
-            />
+            <BookingWidgetSummary title="Parents" total={4000} icon={<CheckOutIllustration />} />
           </Grid>
         </Grid>
       </Container>

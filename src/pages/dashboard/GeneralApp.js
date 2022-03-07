@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
 import Iconify from '../../components/Iconify';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+
 // hooks
 
 import useResponsive from '../../hooks/useResponsive';
@@ -55,15 +55,8 @@ export default function GeneralApp() {
     <Page title="User: Cards">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container spacing={3}>
-          <Grid item xs={7} md={8}>
-            <HeaderBreadcrumbs
-              heading="Schools"
-              links={[
-                { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                { name: 'Schools', href: PATH_DASHBOARD.user.root },
-                { name: 'Cards' },
-              ]}
-            />
+          <Grid sx={{ marginBottom: 5 }} item xs={7} md={8}>
+            <h1>Schools</h1>
           </Grid>
 
           <Grid item xs={5} md={4}>

@@ -148,12 +148,6 @@ export default function ChatSidebar() {
               icon={openSidebar ? 'eva:arrow-ios-back-fill' : 'eva:arrow-ios-forward-fill'}
             />
           </IconButton>
-
-          {!isCollapse && (
-            <IconButton onClick={() => navigate(PATH_DASHBOARD.chat.new)}>
-              <Iconify icon={'eva:edit-fill'} width={20} height={20} />
-            </IconButton>
-          )}
         </Stack>
 
         {!isCollapse && (
