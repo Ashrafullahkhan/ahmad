@@ -12,13 +12,6 @@ export default function Schooldashboard() {
     <Page title="General: Analytics">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-          <Grid item xs={2} sm={2} md={1}>
-            <Button variant="contained">
-              <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
-                Back
-              </Link>
-            </Button>
-          </Grid>
           <Grid item xs={10} sm={10} md={11}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Cambridge Secondary High School
@@ -28,17 +21,26 @@ export default function Schooldashboard() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
-            <BookingWidgetSummary title="Total Kids" total={714000} icon={<BookingIllustration />} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <BookingWidgetSummary title="Total Workers" total={311000} icon={<CheckInIllustration />} />
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/school/kids">
+              <BookingWidgetSummary title="Total Kids" total={714000} icon={<BookingIllustration />} />
+            </Link>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <BookingWidgetSummary title="Activities" total={124000} icon={<CheckOutIllustration />} />
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/school/workers">
+              <BookingWidgetSummary title="Total Workers" total={311000} icon={<CheckInIllustration />} />
+            </Link>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/school/activity">
+              <BookingWidgetSummary title="Activities" total={311000} icon={<CheckInIllustration />} />
+            </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
-            <BookingWidgetSummary title="Parents" total={4000} icon={<CheckOutIllustration />} />
+            <Link style={{ textDecoration: 'none', color: 'white' }} to="/school/kids">
+              <BookingWidgetSummary title="Parents" total={4000} icon={<CheckOutIllustration />} />
+            </Link>
           </Grid>
         </Grid>
       </Container>

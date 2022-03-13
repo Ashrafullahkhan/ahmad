@@ -1,21 +1,45 @@
 import PropTypes from 'prop-types';
+import { capitalCase } from 'change-case';
+import { useState, useCallback } from 'react';
+// @mui
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
 import { useSnackbar } from 'notistack';
-import { useCallback } from 'react';
+
 // form
+import {
+  Container,
+  Tab,
+  Box,
+  Tabs,
+  Stack,
+  Button,
+  Tooltip,
+  Typography,
+  InputAdornment,
+  IconButton,
+  DialogActions,
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { Box, Stack, Button, Tooltip, Typography, InputAdornment, IconButton, DialogActions } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { _userPayment, _userAddressBook, _userInvoices, _userAbout } from '../../../_mock';
+
 // redux
 import { useDispatch } from '../../../redux/store';
 import { createEvent, updateEvent, deleteEvent } from '../../../redux/slices/calendar';
 import { fData } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/Iconify';
+
+import {
+  AccountGeneral,
+  AccountBilling,
+  AccountSocialLinks,
+  AccountNotifications,
+  AccountChangePassword,
+} from '../user/account';
 
 import { FormProvider, RHFTextField, RHFUploadAvatar, RHFSwitch } from '../../../components/hook-form';
 
@@ -125,35 +149,83 @@ export default function WorkerForm({ event, range, onCancel }) {
     },
     [setValue]
   );
+
+  const [currentTab, setCurrentTab] = useState('Nominas');
+
+  const ACCOUNT_TABS = [
+    {
+      value: 'Nominas',
+      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
+      component: (
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={1} sx={{ p: 3 }}>
+            <RHFTextField name="title" label="Name" />
+            <RHFTextField name="title" label="Activity" />
+            <RHFTextField name="title" label="Teacher Name" />
+            <RHFTextField name="title" label="Email" />
+            <RHFTextField name="title" label="Phone Number" />
+            <RHFTextField name="title" label="Name" />
+          </Stack>
+
+          <DialogActions>
+            {!isCreating && (
+              <Tooltip title="Delete Event">
+                <IconButton onClick={handleDelete}>
+                  <Iconify icon="eva:trash-2-outline" width={20} height={20} />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Box sx={{ flexGrow: 1 }} />
+
+            <Button variant="outlined" color="inherit" onClick={onCancel}>
+              Cancel
+            </Button>
+
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting} loadingIndicator="Loading...">
+              Add
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      ),
+    },
+    {
+      value: 'Contratos',
+      icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
+      component: <AccountBilling cards={_userPayment} addressBook={_userAddressBook} invoices={_userInvoices} />,
+    },
+    {
+      value: 'Documents',
+      icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
+      component: <AccountNotifications />,
+    },
+    {
+      value: 'Leaves',
+      icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
+      component: <AccountSocialLinks myProfile={_userAbout} />,
+    },
+  ];
+
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3} sx={{ p: 3 }}>
-        <RHFTextField name="title" label="Name" />
+    <>
+      <Tabs
+        sx={{ marginLeft: 6 }}
+        value={currentTab}
+        scrollButtons="auto"
+        variant="scrollable"
+        allowScrollButtonsMobile
+        onChange={(e, value) => setCurrentTab(value)}
+      >
+        {ACCOUNT_TABS.map((tab) => (
+          <Tab disableRipple key={tab.value} label={capitalCase(tab.value)} icon={tab.icon} value={tab.value} />
+        ))}
+      </Tabs>
 
-        <RHFTextField name="description" label="Email" />
+      <Box sx={{ mb: 5 }} />
 
-        <RHFTextField name="description" label="Contact" />
-        <RHFTextField name="description" label="SSN" />
-      </Stack>
-
-      <DialogActions>
-        {!isCreating && (
-          <Tooltip title="Delete Event">
-            <IconButton onClick={handleDelete}>
-              <Iconify icon="eva:trash-2-outline" width={20} height={20} />
-            </IconButton>
-          </Tooltip>
-        )}
-        <Box sx={{ flexGrow: 1 }} />
-
-        <Button variant="outlined" color="inherit" onClick={onCancel}>
-          Cancel
-        </Button>
-
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting} loadingIndicator="Loading...">
-          Add
-        </LoadingButton>
-      </DialogActions>
-    </FormProvider>
+      {ACCOUNT_TABS.map((tab) => {
+        const isMatched = tab.value === currentTab;
+        return isMatched && <Box key={tab.value}>{tab.component}</Box>;
+      })}
+    </>
   );
 }

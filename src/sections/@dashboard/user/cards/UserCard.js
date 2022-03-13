@@ -81,40 +81,39 @@ export default function UserCard({ user }) {
 
         <OverlayStyle />
         <Image src={cover} alt={cover} ratio="16/9" />
+        <Box sx={{ float: 'right', zIndex: 9999 }}>
+          <MoreMenuButton />
+        </Box>
       </Box>
 
       <Typography variant="subtitle1" sx={{ mt: 6 }}>
         {name}
       </Typography>
 
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', marginBottom: 3 }}>
         {position}
       </Typography>
-
-      <Stack alignItems="center">
-        <SocialsButton initialColor sx={{ my: 2.5 }} />
-      </Stack>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
       <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Students
+            Estudiantes
           </Typography>
           <Typography variant="subtitle1">{fShortenNumber(follower)}</Typography>
         </div>
 
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Workers
+            Trabajadores
           </Typography>
           <Typography variant="subtitle1">{fShortenNumber(following)}</Typography>
         </div>
 
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Activities
+            Actividades
           </Typography>
           <Typography variant="subtitle1">{fShortenNumber(totalPost)}</Typography>
         </div>

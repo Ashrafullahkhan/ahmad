@@ -56,7 +56,7 @@ export default function GeneralApp() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container spacing={3}>
           <Grid sx={{ marginBottom: 5 }} item xs={7} md={8}>
-            <h1>Schools</h1>
+            <h1>Listado colegios</h1>
           </Grid>
 
           <Grid item xs={5} md={4}>
@@ -66,7 +66,7 @@ export default function GeneralApp() {
               startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
               onClick={handleAddEvent}
             >
-              Add New
+              Nuevo colegio
             </Button>
           </Grid>
         </Grid>

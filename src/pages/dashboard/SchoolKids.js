@@ -155,13 +155,6 @@ export default function SchoolWorkers() {
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container spacing={3}>
-          <Grid item xs={2} sm={2} md={1}>
-            <Button variant="contained">
-              <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
-                Back
-              </Link>
-            </Button>
-          </Grid>
           <Grid item xs={6} sm={7} md={9}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Kids

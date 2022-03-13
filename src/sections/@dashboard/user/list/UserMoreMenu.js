@@ -3,7 +3,7 @@ import { paramCase } from 'change-case';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { MenuItem, IconButton } from '@mui/material';
+import { MenuItem, IconButton, Grid } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
@@ -36,33 +36,18 @@ export default function UserMoreMenu({ onDelete, userName, onClick }) {
 
   return (
     <>
-      <IconButton onClick={handleOpen}>
-        <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
-      </IconButton>
-
-      <MenuPopover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        arrow="right-top"
-        sx={{
-          mt: -1,
-          width: 160,
-          '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
-        }}
-      >
+      <Grid container>
         <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
+          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON, padding: 0, margin: 0 }} />
         </MenuItem>
 
         <MenuItem onClick={onClick}>
-          <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          Edit
+          <Iconify icon={'eva:edit-outline'} sx={{ ...ICON, padding: 0, margin: 0 }} />
         </MenuItem>
-      </MenuPopover>
+        <MenuItem onClick={onClick}>
+          <Iconify icon={'eva:eye-outline'} sx={{ ...ICON, padding: 0, margin: 0 }} />
+        </MenuItem>
+      </Grid>
     </>
   );
 }

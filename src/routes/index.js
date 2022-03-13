@@ -137,7 +137,11 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <MainLayout />,
+      element: (
+        <GuestGuard>
+          <Login />
+        </GuestGuard>
+      ),
       children: [{ element: <HomePage />, index: true }],
     },
     { path: '*', element: <Navigate to="/404" replace /> },

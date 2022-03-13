@@ -20,6 +20,7 @@ import {
   TableContainer,
   TablePagination,
   Switch,
+  DialogTitle,
   Button,
 } from '@mui/material';
 // routes
@@ -29,6 +30,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import useSettings from '../../hooks/useSettings';
 import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
 import { DialogAnimate } from '../../components/animate';
+
 import { useDispatch, useSelector } from '../../redux/store';
 import { WorkerForm } from '../../sections/@dashboard/calendar';
 
@@ -68,6 +70,10 @@ export default function SchoolWorkers() {
   const dispatch = useDispatch();
   const { themeStretch } = useSettings();
 
+  const selectedEvent = useSelector(selectedEventSelector);
+
+  const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
+
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -75,6 +81,17 @@ export default function SchoolWorkers() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleAddEvent = () => {
+    dispatch(openModal());
+  };
+  const handleSelectEvent = (arg) => {
+    dispatch(selectEvent(arg.event.id));
+  };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
+  };
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -137,21 +154,29 @@ export default function SchoolWorkers() {
   return (
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Grid container spacing={3}>
-          <Grid item xs={2} sm={2} md={1}>
-            <Button variant="contained">
-              <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
-                Back
-              </Link>
-            </Button>
-          </Grid>
-          <Grid item xs={10} sm={10} md={11}>
+        <Grid container sx={{ marginBottom: 5 }}>
+          <Grid item xs={7} md={8}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Workers
             </Typography>
           </Grid>
-        </Grid>
 
+          <Grid item xs={5} md={4}>
+            <Button
+              style={{ float: 'right' }}
+              variant="contained"
+              startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
+              onClick={handleAddEvent}
+            >
+              Add New
+            </Button>
+          </Grid>
+        </Grid>
+        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
+          <DialogTitle>{selectedEvent ? 'Edit Worker' : 'Add Worker'}</DialogTitle>
+
+          <WorkerForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
+        </DialogAnimate>
         <Card>
           <UserListToolbar
             numSelected={selected.length}
@@ -202,7 +227,7 @@ export default function SchoolWorkers() {
                           <Switch defaultChecked size="small" />
                         </TableCell>
 
-                        <TableCell align="right">
+                        <TableCell align="center">
                           <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
                         </TableCell>
                       </TableRow>
