@@ -154,7 +154,7 @@ export default function Workers() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container sx={{ marginBottom: 5 }}>
           <Grid item xs={7} md={8}>
-            <h1>Workers</h1>
+            <Typography variant="h3">Workers</Typography>
           </Grid>
 
           <Grid item xs={5} md={4}>

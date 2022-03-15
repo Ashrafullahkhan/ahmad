@@ -161,10 +161,10 @@ export default function Category() {
     <Page title="Ecommerce: Product List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container sx={{ marginBottom: 5 }}>
-          <Grid lg={10} md={8} xs={6}>
-            <h1>Category</h1>
+          <Grid lg={10} md={9} xs={8}>
+            <Typography variant="h3">Category</Typography>
           </Grid>
-          <Grid lg={2} md={4} xs={6}>
+          <Grid lg={2} md={3} xs={4}>
             <Button variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />} onClick={handleAddEvent}>
               Add Category
             </Button>

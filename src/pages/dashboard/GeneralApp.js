@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 // @mui
-import { Container, Box, Button, Grid, DialogTitle } from '@mui/material';
+import { Container, Box, Button, Grid, DialogTitle, Typography } from '@mui/material';
 import { useDispatch, useSelector } from '../../redux/store';
 import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
 import Iconify from '../../components/Iconify';
@@ -56,7 +56,7 @@ export default function GeneralApp() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <Grid container spacing={3}>
           <Grid sx={{ marginBottom: 5 }} item xs={7} md={8}>
-            <h1>Listado colegios</h1>
+            <Typography variant="h3">Listado colegios</Typography>
           </Grid>
 
           <Grid item xs={5} md={4}>
@@ -87,9 +87,7 @@ export default function GeneralApp() {
           }}
         >
           {_userCards.map((user) => (
-            <Link to={'/school'} style={{ textDecoration: 'none' }}>
-              <UserCard key={user.id} user={user} />
-            </Link>
+            <UserCard key={user.id} user={user} />
           ))}
         </Box>
       </Container>

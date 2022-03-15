@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 // @mui
-import { Card, Container } from '@mui/material';
+import { Card, Container, Typography } from '@mui/material';
 // redux
 import { useDispatch } from '../../redux/store';
 import { getConversations, getContacts } from '../../redux/slices/chat';
@@ -27,7 +27,9 @@ export default function Chat() {
   return (
     <Page title="Chat">
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <h1 style={{ marginBottom: 6 }}>Chat</h1>
+        <Typography variant="h3" sx={{ mb: 2 }}>
+          Chat
+        </Typography>
         <Card sx={{ height: '72vh', display: 'flex' }}>
           <ChatSidebar />
           <ChatWindow />
