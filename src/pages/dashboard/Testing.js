@@ -24,7 +24,7 @@ import {
   Grid,
 } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+
 // hooks
 import useSettings from '../../hooks/useSettings';
 // _mock_
@@ -32,24 +32,37 @@ import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Label from '../../components/Label';
-import Iconify from '../../components/Iconify';
+
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+
 // sections
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
+import { UserListHead, UserListToolbar2, UserMoreMenu } from '../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+const TABLE_HEAD_ACTIVITY = [
+  { id: 'name', label: 'Nombre', alignRight: false },
+  { id: 'company', label: 'Trabajadores', alignRight: false },
+
   { id: '' },
 ];
-
+const TABLE_HEAD = [
+  { id: 'name', label: 'Nombre', alignRight: false },
+  { id: 'company', label: ' Actividades', alignRight: false },
+  { id: 'role', label: 'Email', alignRight: false },
+  { id: 'isVerified', label: 'Telefono', alignRight: false },
+  { id: 'status', label: ' Estado', alignRight: false },
+  { id: '' },
+];
+const TABLE_HEAD_KIDS = [
+  { id: 'name', label: 'Nombre', alignRight: false },
+  { id: 'company', label: ' Actividades', alignRight: false },
+  { id: 'role', label: 'Nombre tutor', alignRight: false },
+  { id: 'isVerified', label: ' Email', alignRight: false },
+  { id: 'status', label: 'Teléfono', alignRight: false },
+  { id: '' },
+];
 // ----------------------------------------------------------------------
 
 export default function Testing() {
@@ -129,7 +142,7 @@ export default function Testing() {
           <Grid lg={10} sm={10} md={10}>
             <h1>School Config</h1>
           </Grid>
-          <Grid sx={{ marginBottom: 3 }} item xs={7} md={9}>
+          <Grid sx={{ marginBottom: 3 }} item xs={7} md={10}>
             <Box>
               <FormControl>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -149,12 +162,12 @@ export default function Testing() {
               </FormControl>
             </Box>
           </Grid>
-          <Grid item xs={5} md={3}>
+          <Grid item xs={5} md={2}>
             <Button variant="contained">Submit Validation</Button>
           </Grid>
         </Grid>
         <Card sx={{ marginBottom: 7 }}>
-          <UserListToolbar
+          <UserListToolbar2
             tablename="Workers"
             numSelected={selected.length}
             filterName={filterName}
@@ -192,7 +205,6 @@ export default function Testing() {
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
                         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
@@ -245,7 +257,7 @@ export default function Testing() {
           />
         </Card>
         <Card sx={{ marginBottom: 7 }}>
-          <UserListToolbar
+          <UserListToolbar2
             tablename="Activities"
             numSelected={selected.length}
             filterName={filterName}
@@ -259,7 +271,7 @@ export default function Testing() {
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={TABLE_HEAD_ACTIVITY}
                   rowCount={userList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
@@ -283,22 +295,11 @@ export default function Testing() {
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
                         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
                         </TableCell>
                         <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'banned' && 'error') || 'success'}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
 
                         <TableCell align="right">
                           <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
@@ -336,7 +337,7 @@ export default function Testing() {
           />
         </Card>
         <Card sx={{ marginBottom: 7 }}>
-          <UserListToolbar
+          <UserListToolbar2
             tablename="Students"
             numSelected={selected.length}
             filterName={filterName}
@@ -350,7 +351,7 @@ export default function Testing() {
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={TABLE_HEAD_KIDS}
                   rowCount={userList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
@@ -374,7 +375,6 @@ export default function Testing() {
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
                         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>

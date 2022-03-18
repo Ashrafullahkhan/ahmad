@@ -62,21 +62,18 @@ export default function ShopTagFiltered({
   filters,
   isShowReset,
   onRemoveGender,
-  onRemoveCategory,
-  onRemoveColor,
-  onRemovePrice,
-  onRemoveRating,
+
   onResetAll,
 }) {
   const theme = useTheme();
 
-  const { gender, category, colors, priceRange, rating } = filters;
+  const { gender } = filters;
 
   return (
     <RootStyle>
       {gender.length > 0 && (
         <WrapperStyle>
-          <LabelStyle>Gender:</LabelStyle>
+          <LabelStyle>Columns</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
             {gender.map((_gender) => (
               <Chip
@@ -87,60 +84,6 @@ export default function ShopTagFiltered({
                 sx={{ m: 0.5 }}
               />
             ))}
-          </Stack>
-        </WrapperStyle>
-      )}
-
-      {category !== 'All' && (
-        <WrapperStyle>
-          <LabelStyle>Category:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip size="small" label={category} onDelete={onRemoveCategory} sx={{ m: 0.5 }} />
-          </Stack>
-        </WrapperStyle>
-      )}
-
-      {colors.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>Colors:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {colors.map((color) => (
-              <Chip
-                key={color}
-                label={getColorName(color)}
-                size="small"
-                onDelete={() => onRemoveColor(color)}
-                sx={{
-                  m: 0.5,
-                  bgcolor: color,
-                  color: theme.palette.getContrastText(color),
-                  ...((color === '#FFFFFF' || color === '#000000') && {
-                    border: `solid 1px ${theme.palette.grey[500_32]}`,
-                    '& .MuiChip-deleteIcon': {
-                      color: 'text.disabled',
-                    },
-                  }),
-                }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
-      )}
-
-      {priceRange && (
-        <WrapperStyle>
-          <LabelStyle>Price:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip size="small" label={labelPriceRange(priceRange)} onDelete={onRemovePrice} sx={{ m: 0.5 }} />
-          </Stack>
-        </WrapperStyle>
-      )}
-
-      {rating && (
-        <WrapperStyle>
-          <LabelStyle>Rating:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            <Chip size="small" label={sentenceCase(rating)} onDelete={onRemoveRating} sx={{ m: 0.5 }} />
           </Stack>
         </WrapperStyle>
       )}

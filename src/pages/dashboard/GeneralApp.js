@@ -40,7 +40,8 @@ export default function GeneralApp() {
 
   const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
 
-  const handleAddEvent = () => {
+  const handleAddEvent = (e) => {
+    e.preventDefault();
     dispatch(openModal());
   };
   const handleSelectEvent = (arg) => {
@@ -87,7 +88,7 @@ export default function GeneralApp() {
           }}
         >
           {_userCards.map((user) => (
-            <UserCard key={user.id} user={user} />
+            <UserCard onClick={(e) => handleAddEvent(e)} key={user.id} user={user} />
           ))}
         </Box>
       </Container>

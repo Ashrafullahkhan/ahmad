@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-// @mui
+
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Stack, Drawer, Button } from '@mui/material';
 // hooks
@@ -53,7 +53,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     if (isOpenSidebar) {
       onCloseSidebar();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const renderContent = (
@@ -80,12 +79,6 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
             <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
           )}
         </Stack>
-        <Button variant="contained">
-          <Link style={{ textDecoration: 'none', color: 'white' }} to="/dashboard/app">
-            Back
-          </Link>
-        </Button>
-        <NavbarAccount isCollapse={isCollapse} />
       </Stack>
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />

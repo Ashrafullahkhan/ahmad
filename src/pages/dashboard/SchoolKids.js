@@ -47,11 +47,11 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@das
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'name', label: 'Nombre', alignRight: false },
+  { id: 'company', label: ' Actividades', alignRight: false },
+  { id: 'role', label: 'Nombre tutor', alignRight: false },
+  { id: 'isVerified', label: 'Email,', alignRight: false },
+  { id: 'status', label: 'Teléfono', alignRight: false },
   { id: '' },
 ];
 
@@ -64,7 +64,7 @@ const selectedEventSelector = (state) => {
   return null;
 };
 
-export default function SchoolWorkers() {
+export default function SchoolKids() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
@@ -209,7 +209,6 @@ export default function SchoolWorkers() {
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
                         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>

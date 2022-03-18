@@ -154,7 +154,7 @@ export default function SchoolWorkers() {
   return (
     <Page title="User: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Grid container sx={{ marginBottom: 5 }}>
+        <Grid container>
           <Grid item xs={7} md={8}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Workers
@@ -180,6 +180,7 @@ export default function SchoolWorkers() {
         <Card>
           <UserListToolbar
             numSelected={selected.length}
+            tablename={null}
             filterName={filterName}
             onFilterName={handleFilterByName}
             onDeleteUsers={() => handleDeleteMultiUser(selected)}
@@ -215,7 +216,6 @@ export default function SchoolWorkers() {
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
                         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>

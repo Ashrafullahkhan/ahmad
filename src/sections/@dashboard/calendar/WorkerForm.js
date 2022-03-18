@@ -1,11 +1,22 @@
 import PropTypes from 'prop-types';
+import * as React from 'react';
 import { capitalCase } from 'change-case';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
+
 // @mui
 import * as Yup from 'yup';
 import merge from 'lodash/merge';
 import { isBefore } from 'date-fns';
 import { useSnackbar } from 'notistack';
+
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
 
 // form
 import {
@@ -16,6 +27,7 @@ import {
   Stack,
   Button,
   Tooltip,
+  Grid,
   Typography,
   InputAdornment,
   IconButton,
@@ -44,7 +56,16 @@ import {
 import { FormProvider, RHFTextField, RHFUploadAvatar, RHFSwitch } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
-
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 const getInitialValues = (event, range) => {
   const _event = {
     title: '',
@@ -69,8 +90,35 @@ WorkerForm.propTypes = {
   range: PropTypes.object,
   onCancel: PropTypes.func,
 };
-
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
 export default function WorkerForm({ event, range, onCancel }) {
+  const [personName, setPersonName] = React.useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
+  const handleAttach = () => {
+    fileInputRef.current?.click();
+  };
+
+  const fileInputRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
@@ -158,40 +206,37 @@ export default function WorkerForm({ event, range, onCancel }) {
       icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
       component: (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={1} sx={{ p: 3 }}>
-            <RHFTextField name="title" label="Name" />
-            <RHFTextField name="title" label="Activity" />
-            <RHFTextField name="title" label="Teacher Name" />
-            <RHFTextField name="title" label="Email" />
-            <RHFTextField name="title" label="Phone Number" />
-            <RHFTextField name="title" label="Name" />
+          <Stack spacing={1} sx={{ p: 3, paddingLeft: 8 }}>
+            <input style={{ width: '300px' }} ref={fileInputRef} type="file" />
           </Stack>
-
-          <DialogActions>
-            {!isCreating && (
-              <Tooltip title="Delete Event">
-                <IconButton onClick={handleDelete}>
-                  <Iconify icon="eva:trash-2-outline" width={20} height={20} />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Box sx={{ flexGrow: 1 }} />
-
-            <Button variant="outlined" color="inherit" onClick={onCancel}>
-              Cancel
-            </Button>
-
-            <LoadingButton type="submit" variant="contained" loading={isSubmitting} loadingIndicator="Loading...">
-              Add
-            </LoadingButton>
-          </DialogActions>
         </FormProvider>
       ),
     },
     {
       value: 'Contratos',
       icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
-      component: <AccountBilling cards={_userPayment} addressBook={_userAddressBook} invoices={_userInvoices} />,
+      component: (
+        <Grid sx={{ marginLeft: 10, width: 400 }}>
+          <FormControl sx={{ m: 1, width: 400 }}>
+            <InputLabel id="demo-multiple-checkbox-label">Select Documents Type</InputLabel>
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              value={personName}
+              onChange={handleChange}
+              input={<OutlinedInput label="Select Documents Type" />}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem key={name} value={name}>
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </Select>
+            <input style={{ marginTop: 15 }} ref={fileInputRef} type="file" />
+          </FormControl>
+        </Grid>
+      ),
     },
     {
       value: 'Documents',
@@ -226,6 +271,24 @@ export default function WorkerForm({ event, range, onCancel }) {
         const isMatched = tab.value === currentTab;
         return isMatched && <Box key={tab.value}>{tab.component}</Box>;
       })}
+      <DialogActions>
+        {!isCreating && (
+          <Tooltip title="Delete Event">
+            <IconButton onClick={handleDelete}>
+              <Iconify icon="eva:trash-2-outline" width={20} height={20} />
+            </IconButton>
+          </Tooltip>
+        )}
+        <Box sx={{ flexGrow: 1 }} />
+
+        <Button variant="outlined" color="inherit" onClick={onCancel}>
+          Cancel
+        </Button>
+
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} loadingIndicator="Loading...">
+          Add
+        </LoadingButton>
+      </DialogActions>
     </>
   );
 }

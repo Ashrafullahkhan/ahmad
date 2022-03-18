@@ -156,8 +156,10 @@ export default function CalendarForm({ event, range, onCancel }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid sx={{ marginTop: 1 }} container spacing={3}>
-        <Grid item md={6} xs={12} sx={{ marginLeft: 4 }}>
+        <Grid item md={12} xs={12} sx={{ marginLeft: 4 }}>
           <RHFCoverAvatar name="avatarUrl" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
+        </Grid>
+        <Grid item md={6} xs={12}>
           <RHFUploadAvatar
             sx={{ marginTop: 4 }}
             name="avatarUrl"
@@ -168,17 +170,9 @@ export default function CalendarForm({ event, range, onCancel }) {
         </Grid>
         <Grid item md={5} xs={12} sx={{ p: 3, marginLeft: 3 }}>
           <RHFTextField name="title" label="Name" />
-          <RHFTextField name="description" label="Address" />
-          <RHFTextField name="description" label="Director" />
-          {SOCIAL_LINKS.map((link) => (
-            <RHFTextField
-              key={link.value}
-              name={link.value}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">{link.icon}</InputAdornment>,
-              }}
-            />
-          ))}
+
+          <RHFTextField name="director" label="Director" />
+          <RHFTextField name="phonenumber" label="Phone Number" />
         </Grid>
       </Grid>
       <DialogActions>

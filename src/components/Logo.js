@@ -24,9 +24,5 @@ export default function Logo({ disabledLink = false, sx }) {
     </Box>
   );
 
-  if (disabledLink) {
-    return <>{logo}</>;
-  }
-
-  return <RouterLink to="">{logo}</RouterLink>;
+  return <RouterLink to="/dashboard/app">{logo}</RouterLink>;
 }

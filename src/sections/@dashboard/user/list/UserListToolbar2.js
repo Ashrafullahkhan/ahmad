@@ -25,7 +25,7 @@ UserListToolbar.propTypes = {
   onDeleteUsers: PropTypes.func,
 };
 
-export default function UserListToolbar({ tablename = null, numSelected, filterName, onFilterName, onDeleteUsers }) {
+export default function UserListToolbar({ tablename, numSelected, filterName, onFilterName, onDeleteUsers }) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -44,6 +44,7 @@ export default function UserListToolbar({ tablename = null, numSelected, filterN
         </Typography>
       ) : (
         <>
+          <Typography variant="h4">{tablename}</Typography>
           <InputStyle
             stretchStart={240}
             value={filterName}
@@ -57,7 +58,6 @@ export default function UserListToolbar({ tablename = null, numSelected, filterN
               ),
             }}
           />
-          <Typography variant="h4">{tablename}</Typography>
         </>
       )}
     </RootStyle>

@@ -132,7 +132,7 @@ export default function KidsForm({ event, range, onCancel }) {
         <RHFTextField name="title" label="Teacher Name" />
         <RHFTextField name="title" label="Email" />
         <RHFTextField name="title" label="Phone Number" />
-        <RHFTextField name="title" label="Name" />
+        <RHFTextField name="title" label="Teacher Name" />
       </Stack>
 
       <DialogActions>

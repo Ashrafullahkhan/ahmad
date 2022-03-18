@@ -44,7 +44,7 @@ UserCard.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-export default function UserCard({ user }) {
+export default function UserCard({ user, onClick }) {
   const { name, cover, position, follower, totalPost, avatarUrl, following } = user;
   const [open, setOpen] = useState(null);
 
@@ -120,7 +120,7 @@ export default function UserCard({ user }) {
             '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
           }}
         >
-          <MenuItem>
+          <MenuItem onClick={onClick}>
             <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
             Edit
           </MenuItem>

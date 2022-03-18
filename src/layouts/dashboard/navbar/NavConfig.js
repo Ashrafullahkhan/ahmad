@@ -24,8 +24,22 @@ const ICONS = {
 };
 
 const navConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
+  {
+    subheader: 'Schools',
+    items: [
+      // MANAGEMENT : USER
+      {
+        title: 'Schools',
+        path: PATH_DASHBOARD.user.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'School One', path: PATH_DASHBOARD.school.dashboard },
+          { title: 'School Two', path: PATH_DASHBOARD.school.dashboard },
+          { title: 'School Three', path: PATH_DASHBOARD.school.dashboard },
+        ],
+      },
+    ],
+  },
   {
     subheader: 'general',
     items: [
