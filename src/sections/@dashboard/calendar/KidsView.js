@@ -8,17 +8,7 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import {
-  Box,
-  Stack,
-  Button,
-  Tooltip,
-  Typography,
-  InputAdornment,
-  IconButton,
-  DialogActions,
-  Grid,
-} from '@mui/material';
+import { Box, Stack, Button, Tooltip, Typography, InputAdornment, IconButton, DialogActions } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch } from '../../../redux/store';
@@ -27,27 +17,9 @@ import { fData } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/Iconify';
 
-import { FormProvider, RHFTextField, RHFUploadAvatar, RHFCoverAvatar } from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFUploadAvatar, RHFCheckbox } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
-const SOCIAL_LINKS = [
-  {
-    value: 'facebookLink',
-    icon: <Iconify icon={'eva:facebook-fill'} width={24} height={24} />,
-  },
-  {
-    value: 'instagramLink',
-    icon: <Iconify icon={'ant-design:instagram-filled'} width={24} height={24} />,
-  },
-  {
-    value: 'linkedinLink',
-    icon: <Iconify icon={'eva:linkedin-fill'} width={24} height={24} />,
-  },
-  {
-    value: 'twitterLink',
-    icon: <Iconify icon={'eva:twitter-fill'} width={24} height={24} />,
-  },
-];
 
 const getInitialValues = (event, range) => {
   const _event = {
@@ -67,14 +39,13 @@ const getInitialValues = (event, range) => {
 };
 
 // ----------------------------------------------------------------------
-
-CalendarForm.propTypes = {
+KidsView.propTypes = {
   event: PropTypes.object,
   range: PropTypes.object,
   onCancel: PropTypes.func,
 };
 
-export default function CalendarForm({ event, range, onCancel }) {
+export default function KidsView({ event, range, onCancel }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
@@ -155,26 +126,15 @@ export default function CalendarForm({ event, range, onCancel }) {
   );
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid sx={{ marginTop: 1 }} container spacing={3}>
-        <Grid item md={12} xs={12} sx={{ marginLeft: 4 }}>
-          <RHFCoverAvatar name="avatarUrl" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
-        </Grid>
-        <Grid item md={6} xs={12}>
-          <RHFUploadAvatar
-            sx={{ marginTop: 4 }}
-            name="avatarUrl"
-            accept="image/*"
-            maxSize={3145728}
-            onDrop={handleDrop}
-          />
-        </Grid>
-        <Grid item md={5} xs={12} sx={{ p: 3, marginLeft: 3 }}>
-          <RHFTextField name="title" label="Name" />
+      <Stack spacing={1} sx={{ p: 3 }}>
+        <RHFTextField name="title" label="Name" />
+        <RHFTextField name="title" label="Activity" />
+        <RHFTextField name="title" label="Teacher Name" />
+        <RHFTextField name="title" label="Email" />
+        <RHFTextField name="title" label="Phone Number" />
+        <RHFTextField name="title" label="Teacher Name" />
+      </Stack>
 
-          <RHFTextField name="director" label="Director" />
-          <RHFTextField name="phonenumber" label="Phone Number" />
-        </Grid>
-      </Grid>
       <DialogActions>
         {!isCreating && (
           <Tooltip title="Delete Event">

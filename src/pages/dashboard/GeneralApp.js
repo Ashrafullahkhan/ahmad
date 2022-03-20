@@ -20,7 +20,7 @@ import { DialogAnimate } from '../../components/animate';
 
 // sections
 import { UserCard } from '../../sections/@dashboard/user/cards';
-import { CalendarForm } from '../../sections/@dashboard/calendar';
+import { SchoolForm } from '../../sections/@dashboard/calendar';
 // ----------------------------------------------------------------------
 const selectedEventSelector = (state) => {
   const { events, selectedEventId } = state.calendar;
@@ -74,7 +74,7 @@ export default function GeneralApp() {
         <DialogAnimate maxWidht={'md'} open={isOpenModal} onClose={handleCloseModal}>
           <DialogTitle>{selectedEvent ? 'Edit School' : 'Add School'}</DialogTitle>
 
-          <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
+          <SchoolForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
         </DialogAnimate>
         <Box
           sx={{

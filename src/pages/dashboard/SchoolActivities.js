@@ -38,7 +38,15 @@ import { _userList } from '../../_mock';
 import { getProducts, filterProducts } from '../../redux/slices/product';
 // components
 import { useDispatch, useSelector } from '../../redux/store';
-import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
+import {
+  openModal,
+  openViewModal,
+  closeModal,
+  closeViewModal,
+  updateEvent,
+  selectEvent,
+  selectRange,
+} from '../../redux/slices/calendar';
 import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Iconify from '../../components/Iconify';
@@ -53,7 +61,7 @@ import {
   ShopFilterSidebar,
   ShopProductSearch,
 } from '../../sections/@dashboard/e-commerce/shop';
-import { ActivityForm } from '../../sections/@dashboard/calendar';
+import { ActivityForm, ActivityView } from '../../sections/@dashboard/calendar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
@@ -89,7 +97,7 @@ export default function SchoolWorkers() {
 
   const selectedEvent = useSelector(selectedEventSelector);
 
-  const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
+  const { isOpenModal, isOpenViewModal, selectedRange } = useSelector((state) => state.calendar);
 
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
@@ -176,12 +184,19 @@ export default function SchoolWorkers() {
     }
     setSelected(newSelected);
   };
+  const handleAddView = () => {
+    dispatch(openViewModal());
+  };
   const handleAddEvent = () => {
     dispatch(openModal());
   };
 
   const handleCloseModal = () => {
     dispatch(closeModal());
+  };
+
+  const handleCloseViewModal = () => {
+    dispatch(closeViewModal());
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -306,11 +321,7 @@ export default function SchoolWorkers() {
                         <TableCell alignitems="left">{company}</TableCell>
 
                         <TableCell alignitems="left">
-                          <UserMoreMenu
-                            onClick={handleAddEvent}
-                            onDelete={() => handleDeleteUser(id)}
-                            userName={name}
-                          />
+                          <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />
                         </TableCell>
                       </TableRow>
                     );
@@ -344,6 +355,9 @@ export default function SchoolWorkers() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <DialogAnimate maxWidht={'md'} open={isOpenViewModal} onClose={handleCloseViewModal}>
+          <ActivityView event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseViewModal} />
+        </DialogAnimate>
       </Container>
     </Page>
   );

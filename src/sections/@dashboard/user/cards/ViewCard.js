@@ -1,34 +1,52 @@
-import { sentenceCase } from 'change-case';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link as RouterLink, Link } from 'react-router-dom';
-import * as React from 'react';
-
+import { Link } from 'react-router-dom';
 // @mui
-import { useTheme } from '@mui/material/styles';
+
+import { capitalCase, sentenceCase } from 'change-case';
+import { styled, useTheme } from '@mui/material/styles';
 import {
+  Box,
   Card,
-  Table,
   Avatar,
-  Button,
-  Checkbox,
+  Divider,
+  Typography,
+  Tab,
   TableRow,
+  TableContainer,
   TableBody,
   TableCell,
-  Container,
-  Typography,
-  TableContainer,
+  Table,
   TablePagination,
-  Grid,
-  DialogTitle,
+  Tabs,
+  Stack,
+  Checkbox,
+  MenuItem,
+  IconButton,
+  CardHeader,
+  FormControlLabel,
 } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
-import useResponsive from '../../hooks/useResponsive';
-import { DialogAnimate } from '../../components/animate';
+import Page from '../../../../components/Page';
+import Label from '../../../../components/Label';
 
-import { useDispatch, useSelector } from '../../redux/store';
+import Scrollbar from '../../../../components/Scrollbar';
+import SearchNotFound from '../../../../components/SearchNotFound';
+import useSettings from '../../../../hooks/useSettings';
+import useResponsive from '../../../../hooks/useResponsive';
+import { DialogAnimate } from '../../../../components/animate';
+import { useDispatch, useSelector } from '../../../../redux/store';
+// utils
+import { _userList } from '../../../../_mock';
+// components
+import cssStyles from '../../../../utils/cssStyles';
+import { fShortenNumber } from '../../../../utils/formatNumber';
+import Iconify from '../../../../components/Iconify';
+import MenuPopover from '../../../../components/MenuPopover';
+// components
+import Image from '../../../../components/Image';
+import SocialsButton from '../../../../components/SocialsButton';
+import SvgIconStyle from '../../../../components/SvgIconStyle';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../list';
 import {
   openModal,
   closeModal,
@@ -37,23 +55,19 @@ import {
   updateEvent,
   selectEvent,
   selectRange,
-} from '../../redux/slices/calendar';
-// _mock_
-import { _userList } from '../../_mock';
-// components
-import Page from '../../components/Page';
-import Label from '../../components/Label';
-import Iconify from '../../components/Iconify';
-import Scrollbar from '../../components/Scrollbar';
-import SearchNotFound from '../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-
-// sections
-import { KidsForm, KidsView } from '../../sections/@dashboard/calendar';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
-
+} from '../../../../redux/slices/calendar';
 // ----------------------------------------------------------------------
 
+const OverlayStyle = styled('div')(({ theme }) => ({
+  top: 0,
+  zIndex: 8,
+  content: "''",
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+}));
+
+// ----------------------------------------------------------------------
 const TABLE_HEAD = [
   { id: 'name', label: 'Nombre', alignRight: false },
   { id: 'company', label: ' Actividades', alignRight: false },
@@ -62,8 +76,37 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Teléfono', alignRight: false },
   { id: '' },
 ];
+ViewCard.propTypes = {
+  user: PropTypes.object.isRequired,
+};
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
 
-// ----------------------------------------------------------------------
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function applySortFilter(array, comparator, query) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  if (query) {
+    return array.filter((_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+  }
+  return stabilizedThis.map((el) => el[0]);
+}
 const selectedEventSelector = (state) => {
   const { events, selectedEventId } = state.calendar;
   if (selectedEventId) {
@@ -72,17 +115,18 @@ const selectedEventSelector = (state) => {
   return null;
 };
 
-export default function SchoolKids() {
-  const theme = useTheme();
-  const { themeStretch } = useSettings();
+export default function ViewCard({ user, onClick }) {
+  const { name, cover, position, follower, totalPost, avatarUrl, following } = user;
+  const [open, setOpen] = useState(null);
+
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const isDesktop = useResponsive('up', 'sm');
 
   const selectedEvent = useSelector(selectedEventSelector);
 
   const { isOpenModal, selectedRange, isOpenViewModal } = useSelector((state) => state.calendar);
-
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -90,6 +134,11 @@ export default function SchoolKids() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+
+  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+
+  const isNotFound = !filteredUsers.length && Boolean(filterName);
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -158,32 +207,11 @@ export default function SchoolKids() {
     setUserList(deleteUsers);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
-
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
-
-  const isNotFound = !filteredUsers.length && Boolean(filterName);
-
-  return (
-    <Page title="User: List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <Grid container spacing={3}>
-          <Grid item xs={6} sm={7} md={9}>
-            <Typography variant="h4" sx={{ mb: 5 }}>
-              Kids
-            </Typography>
-          </Grid>
-          <Grid item xs={4} sm={3} md={2}>
-            <Button variant="contained" onClick={handleAddEvent} startIcon={<Iconify icon={'eva:plus-fill'} />}>
-              Add New
-            </Button>
-          </Grid>
-        </Grid>
-        <DialogAnimate maxWidht={'sm'} open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Kid' : 'Add Kid'}</DialogTitle>
-
-          <KidsForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
-        </DialogAnimate>
+  const ACCOUNT_TABS = [
+    {
+      value: 'Kids Registered',
+      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
+      component: (
         <Card>
           <UserListToolbar
             numSelected={selected.length}
@@ -238,13 +266,7 @@ export default function SchoolKids() {
                           </Label>
                         </TableCell>
 
-                        <TableCell align="right">
-                          <UserMoreMenu
-                            onClick={handleAddEvent}
-                            onDelete={() => handleDeleteUser(id)}
-                            userName={name}
-                          />
-                        </TableCell>
+                        <UserMoreMenu onClick={handleAddEvent} onDelete={() => handleDeleteUser(id)} userName={name} />
                       </TableRow>
                     );
                   })}
@@ -277,43 +299,103 @@ export default function SchoolKids() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
-        <DialogAnimate maxWidht={'sm'} open={isOpenViewModal} onClose={handleCloseViewModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Kid' : 'Add Kid'}</DialogTitle>
+      ),
+    },
+    {
+      value: 'Kids Assistance',
+      icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
+      component: <p>working</p>,
+    },
+  ];
+  const handleOpen = (event) => {
+    event.preventDefault();
+    setOpen(event.currentTarget);
+  };
 
-          <KidsView event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseViewModal} />
-        </DialogAnimate>
-      </Container>
-    </Page>
+  const handleClose = (e) => {
+    e.preventDefault();
+    setOpen(null);
+  };
+
+  const ICON = {
+    mr: 2,
+    width: 20,
+    height: 20,
+  };
+  const [currentTab, setCurrentTab] = useState('Kids Registered');
+
+  return (
+    <Card sx={{ textAlign: 'center' }}>
+      <Box sx={{ position: 'relative' }}>
+        <SvgIconStyle
+          src="https://minimal-assets-api.vercel.app/assets/icons/shape-avatar.svg"
+          sx={{
+            width: 144,
+            height: 62,
+            zIndex: 10,
+            left: 0,
+            right: 0,
+            bottom: -26,
+            mx: 'auto',
+            position: 'absolute',
+            color: 'background.paper',
+          }}
+        />
+
+        <Avatar
+          alt={name}
+          src={avatarUrl}
+          sx={{
+            width: 64,
+            height: 64,
+            zIndex: 11,
+            left: 0,
+            right: 0,
+            bottom: -32,
+            mx: 'auto',
+            position: 'absolute',
+          }}
+        />
+
+        <Image src={cover} alt={cover} ratio="40/9" />
+      </Box>
+
+      <Box sx={{ py: 2, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+        <div>
+          <Typography variant="subtitle1" component="div" sx={{ mb: 0.75 }}>
+            Activity Name
+          </Typography>
+          <Typography variant="caption">Cooking</Typography>
+        </div>
+
+        <div>
+          <Typography variant="subtitle1" component="div" sx={{ mb: 0.75 }}>
+            Discreption
+          </Typography>
+          <Typography variant="caption">here will show all the Discreption given by admin</Typography>
+        </div>
+      </Box>
+      <Divider sx={{ borderStyle: 'dashed' }} />
+
+      <Tabs
+        sx={{ marginLeft: 6 }}
+        value={currentTab}
+        scrollButtons="auto"
+        variant="scrollable"
+        allowScrollButtonsMobile
+        onChange={(e, value) => setCurrentTab(value)}
+      >
+        {ACCOUNT_TABS.map((tab) => (
+          <Tab disableRipple key={tab.value} label={capitalCase(tab.value)} icon={tab.icon} value={tab.value} />
+        ))}
+      </Tabs>
+
+      <Box sx={{ mb: 5 }} />
+
+      {ACCOUNT_TABS.map((tab) => {
+        const isMatched = tab.value === currentTab;
+        return isMatched && <Box key={tab.value}>{tab.component}</Box>;
+      })}
+    </Card>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return array.filter((_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el) => el[0]);
 }

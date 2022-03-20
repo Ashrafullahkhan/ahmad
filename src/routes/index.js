@@ -115,7 +115,6 @@ export default function Router() {
             { path: ':conversationKey', element: <Chat /> },
           ],
         },
-        { path: 'calendar', element: <Calendar /> },
       ],
     },
 
@@ -179,8 +178,6 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 
 // Main
 const HomePage = Loadable(lazy(() => import('../pages/Home')));

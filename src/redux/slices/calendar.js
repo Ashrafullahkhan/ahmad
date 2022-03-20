@@ -11,6 +11,7 @@ const initialState = {
   error: null,
   events: [],
   isOpenModal: false,
+  isOpenViewModal: false,
   selectedEventId: null,
   selectedRange: null,
 };
@@ -68,6 +69,7 @@ const slice = createSlice({
     selectEvent(state, action) {
       const eventId = action.payload;
       state.isOpenModal = true;
+      state.isOpenViewModal = true;
       state.selectedEventId = eventId;
     },
 
@@ -75,6 +77,7 @@ const slice = createSlice({
     selectRange(state, action) {
       const { start, end } = action.payload;
       state.isOpenModal = true;
+      state.isOpenViewModal = true;
       state.selectedRange = { start, end };
     },
 
@@ -82,10 +85,18 @@ const slice = createSlice({
     openModal(state) {
       state.isOpenModal = true;
     },
+    openViewModal(state) {
+      state.isOpenViewModal = true;
+    },
 
     // CLOSE MODAL
     closeModal(state) {
       state.isOpenModal = false;
+      state.selectedEventId = null;
+      state.selectedRange = null;
+    },
+    closeViewModal(state) {
+      state.isOpenViewModal = false;
       state.selectedEventId = null;
       state.selectedRange = null;
     },
@@ -96,7 +107,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { openModal, closeModal, selectEvent } = slice.actions;
+export const { openViewModal, openModal, closeViewModal, closeModal, selectEvent } = slice.actions;
 
 // ----------------------------------------------------------------------
 

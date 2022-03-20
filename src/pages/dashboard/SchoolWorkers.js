@@ -28,11 +28,11 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
-import { openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
+import { openModal, closeModal, openViewModal, closeViewModal, selectEvent } from '../../redux/slices/calendar';
 import { DialogAnimate } from '../../components/animate';
 
 import { useDispatch, useSelector } from '../../redux/store';
-import { WorkerForm } from '../../sections/@dashboard/calendar';
+import { WorkerForm, WorkerView } from '../../sections/@dashboard/calendar';
 
 // _mock_
 import { _userList } from '../../_mock';
@@ -72,7 +72,7 @@ export default function SchoolWorkers() {
 
   const selectedEvent = useSelector(selectedEventSelector);
 
-  const { isOpenModal, selectedRange } = useSelector((state) => state.calendar);
+  const { isOpenModal, selectedRange, isOpenViewModal } = useSelector((state) => state.calendar);
 
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
@@ -132,11 +132,17 @@ export default function SchoolWorkers() {
     setFilterName(filterName);
     setPage(0);
   };
+  const handleAddView = () => {
+    dispatch(openViewModal());
+  };
 
   const handleDeleteUser = (userId) => {
     const deleteUser = userList.filter((user) => user.id !== userId);
     setSelected([]);
     setUserList(deleteUser);
+  };
+  const handleCloseViewModal = () => {
+    dispatch(closeViewModal());
   };
 
   const handleDeleteMultiUser = (selected) => {
@@ -228,7 +234,7 @@ export default function SchoolWorkers() {
                         </TableCell>
 
                         <TableCell align="center">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />
                         </TableCell>
                       </TableRow>
                     );
@@ -263,6 +269,9 @@ export default function SchoolWorkers() {
           />
         </Card>
       </Container>
+      <DialogAnimate open={isOpenViewModal} onClose={handleCloseViewModal}>
+        <WorkerView event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseViewModal} />
+      </DialogAnimate>
     </Page>
   );
 }
