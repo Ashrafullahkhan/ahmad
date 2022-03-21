@@ -27,6 +27,11 @@ import {
 
 // hooks
 import useSettings from '../../hooks/useSettings';
+import { openModal, closeModal, openViewModal, closeViewModal, selectEvent } from '../../redux/slices/calendar';
+import { DialogAnimate } from '../../components/animate';
+
+import { useDispatch, useSelector } from '../../redux/store';
+import { WorkerForm, WorkerView, ActivityView } from '../../sections/@dashboard/calendar';
 // _mock_
 import { _userList } from '../../_mock';
 // components
@@ -64,11 +69,17 @@ const TABLE_HEAD_KIDS = [
   { id: '' },
 ];
 // ----------------------------------------------------------------------
-
+const selectedEventSelector = (state) => {
+  const { events, selectedEventId } = state.calendar;
+  if (selectedEventId) {
+    return events.find((_event) => _event.id === selectedEventId);
+  }
+  return null;
+};
 export default function Search() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
-
+  const dispatch = useDispatch();
   const [userList, setUserList] = useState(_userList);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -76,13 +87,13 @@ export default function Search() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const { isOpenModal, selectedRange, isOpenViewModal } = useSelector((state) => state.calendar);
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-
+  const selectedEvent = useSelector(selectedEventSelector);
   const handleSelectAllClick = (checked) => {
     if (checked) {
       const newSelecteds = userList.map((n) => n.name);
@@ -127,6 +138,13 @@ export default function Search() {
     const deleteUsers = userList.filter((user) => !selected.includes(user.name));
     setSelected([]);
     setUserList(deleteUsers);
+  };
+  const handleAddView = () => {
+    dispatch(openViewModal());
+  };
+
+  const handleCloseViewModal = () => {
+    dispatch(closeViewModal());
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -203,7 +221,7 @@ export default function Search() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />
                         </TableCell>
                       </TableRow>
                     );
@@ -278,7 +296,7 @@ export default function Search() {
                         <TableCell align="left">{company}</TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />
                         </TableCell>
                       </TableRow>
                     );
@@ -399,6 +417,12 @@ export default function Search() {
           />
         </Card>
       </Container>
+      <DialogAnimate open={isOpenViewModal} onClose={handleCloseViewModal}>
+        <WorkerView event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseViewModal} />
+      </DialogAnimate>
+      <DialogAnimate maxWidht={'md'} open={isOpenViewModal} onClose={handleCloseViewModal}>
+        <ActivityView event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseViewModal} />
+      </DialogAnimate>
     </Page>
   );
 }
