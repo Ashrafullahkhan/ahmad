@@ -30,7 +30,7 @@ const selectedEventSelector = (state) => {
   return null;
 };
 
-export default function GeneralApp() {
+export default function MainSchool() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
 

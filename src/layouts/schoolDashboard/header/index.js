@@ -85,7 +85,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           <Button variant="contained">Año escolar: 2021 - 2022</Button>
           <Button variant="contained">
-            <Link to="/dashboard/testing" style={{ textDecoration: 'none', color: 'white' }}>
+            <Link to="/dashboard/newyear" style={{ textDecoration: 'none', color: 'white' }}>
               Nuevo año escolar
             </Link>
           </Button>

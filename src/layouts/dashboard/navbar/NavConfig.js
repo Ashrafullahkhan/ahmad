@@ -43,7 +43,7 @@ const navConfig = [
   {
     subheader: 'general',
     items: [
-      { title: 'Schools', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      { title: 'Schools', path: PATH_DASHBOARD.general.mainschool, icon: ICONS.dashboard },
       { title: 'Search', path: PATH_DASHBOARD.general.search, icon: ICONS.ecommerce },
       { title: 'workers', path: PATH_DASHBOARD.general.workers, icon: ICONS.analytics },
       { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
