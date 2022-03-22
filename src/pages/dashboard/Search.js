@@ -58,7 +58,7 @@ const TABLE_HEAD = [
   { id: 'role', label: 'Email', alignRight: false },
   { id: 'isVerified', label: 'Telefono', alignRight: false },
   { id: 'status', label: ' Estado', alignRight: false },
-  { id: '' },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 const TABLE_HEAD_KIDS = [
   { id: 'name', label: 'Nombre', alignRight: false },
@@ -66,7 +66,7 @@ const TABLE_HEAD_KIDS = [
   { id: 'role', label: 'Nombre tutor', alignRight: false },
   { id: 'isVerified', label: ' Email', alignRight: false },
   { id: 'status', label: 'Teléfono', alignRight: false },
-  { id: '' },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 // ----------------------------------------------------------------------
 const selectedEventSelector = (state) => {
@@ -255,81 +255,7 @@ export default function Search() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
-        <Card sx={{ marginBottom: 7 }}>
-          <Typography variant="h5" sx={{ padding: 2 }}>
-            Activity
-          </Typography>
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD_ACTIVITY}
-                  rowCount={userList.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
 
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Typography variant="subtitle2" noWrap>
-                            {name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-
-                        <TableCell align="right">
-                          <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={userList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(e, page) => setPage(page)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
         <Card sx={{ marginBottom: 7 }}>
           <Typography variant="h5" sx={{ padding: 2 }}>
             Students

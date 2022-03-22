@@ -241,12 +241,12 @@ export default function WorkerForm({ event, range, onCancel }) {
     {
       value: 'Documents',
       icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
-      component: <AccountNotifications />,
+      component: <p>required Info</p>,
     },
     {
       value: 'Leaves',
       icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
-      component: <AccountSocialLinks myProfile={_userAbout} />,
+      component: <p>required Info</p>,
     },
   ];
 

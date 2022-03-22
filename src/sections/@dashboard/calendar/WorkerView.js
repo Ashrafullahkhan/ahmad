@@ -242,12 +242,12 @@ export default function WorkerView({ event, range, onCancel }) {
     {
       value: 'Documents',
       icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
-      component: <AccountNotifications />,
+      component: <p style={{ marginLeft: 10 }}>required Info</p>,
     },
     {
       value: 'Leaves',
       icon: <Iconify icon={'eva:share-fill'} width={20} height={20} />,
-      component: <AccountSocialLinks myProfile={_userAbout} />,
+      component: <p style={{ marginLeft: 10 }}>required Info</p>,
     },
   ];
 

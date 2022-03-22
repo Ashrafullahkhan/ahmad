@@ -1,8 +1,11 @@
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, Link } from 'react-router-dom';
 import * as React from 'react';
-
+import orderBy from 'lodash/orderBy';
+// form
+import { useForm } from 'react-hook-form';
+// @mui
 // @mui
 import { useTheme } from '@mui/material/styles';
 
@@ -18,6 +21,7 @@ import {
   Container,
   Typography,
   TableContainer,
+  Stack,
   TablePagination,
   Switch,
   DialogTitle,
@@ -33,7 +37,7 @@ import { DialogAnimate } from '../../components/animate';
 
 import { useDispatch, useSelector } from '../../redux/store';
 import { WorkerForm, WorkerView } from '../../sections/@dashboard/calendar';
-
+import { getProducts, filterProducts } from '../../redux/slices/product';
 // _mock_
 import { _userList } from '../../_mock';
 // components
@@ -42,19 +46,26 @@ import Label from '../../components/Label';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-
+import {
+  ShopTagFiltered,
+  ShopProductSort,
+  ShopProductList,
+  ShopFilterSidebar,
+  ShopProductSearch,
+} from '../../sections/@dashboard/e-commerce/shop';
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../components/hook-form';
 // sections
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
-
+export const FILTER_GENDER_OPTIONS = ['Nombre', 'Trabajadores'];
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'name', label: 'Nombre', alignRight: false },
+  { id: 'company', label: 'Actividades', alignRight: false },
+  { id: 'role', label: ' Email', alignRight: false },
+  { id: 'isVerified', label: 'Telefono', alignRight: false },
+  { id: 'status', label: 'Estado', alignRight: false },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 
 // ----------------------------------------------------------------------
@@ -68,6 +79,7 @@ const selectedEventSelector = (state) => {
 export default function SchoolWorkers() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const [openFilter, setOpenFilter] = useState(false);
   const { themeStretch } = useSettings();
 
   const selectedEvent = useSelector(selectedEventSelector);
@@ -81,6 +93,59 @@ export default function SchoolWorkers() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { products, sortBy, filters } = useSelector((state) => state.product);
+
+  const filteredProducts = applyFilter(products, sortBy, filters);
+
+  const defaultValues = {
+    gender: filters.gender,
+    category: filters.category,
+    colors: filters.colors,
+    priceRange: filters.priceRange,
+    rating: filters.rating,
+  };
+
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const { reset, watch, setValue } = methods;
+
+  const values = watch();
+
+  const isDefault =
+    !values.priceRange &&
+    !values.rating &&
+    values.gender.length === 0 &&
+    values.colors.length === 0 &&
+    values.category === 'All';
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(filterProducts(values));
+  }, [dispatch, values]);
+
+  const handleOpenFilter = () => {
+    setOpenFilter(true);
+  };
+
+  const handleCloseFilter = () => {
+    setOpenFilter(false);
+  };
+
+  const handleResetFilter = () => {
+    reset();
+    handleCloseFilter();
+  };
+
+  const handleRemoveGender = (value) => {
+    const newValue = filters.gender.filter((item) => item !== value);
+    setValue('gender', newValue);
+  };
 
   const handleAddEvent = () => {
     dispatch(openModal());
@@ -183,10 +248,37 @@ export default function SchoolWorkers() {
 
           <WorkerForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
         </DialogAnimate>
+        <Stack sx={{ mb: 1 }}>
+          {!isDefault && (
+            <>
+              <Typography variant="body2" gutterBottom>
+                <strong>{filteredProducts.length}</strong>
+                &nbsp;Details found
+              </Typography>
+
+              <ShopTagFiltered
+                filters={filters}
+                isShowReset={!isDefault && !openFilter}
+                onRemoveGender={handleRemoveGender}
+                onResetAll={handleResetFilter}
+              />
+            </>
+          )}
+        </Stack>
         <Card>
           <UserListToolbar
+            tablename={
+              <FormProvider methods={methods}>
+                <ShopFilterSidebar
+                  filter={FILTER_GENDER_OPTIONS}
+                  onResetAll={handleResetFilter}
+                  isOpen={openFilter}
+                  onOpen={handleOpenFilter}
+                  onClose={handleCloseFilter}
+                />
+              </FormProvider>
+            }
             numSelected={selected.length}
-            tablename={null}
             filterName={filterName}
             onFilterName={handleFilterByName}
             onDeleteUsers={() => handleDeleteMultiUser(selected)}
@@ -277,7 +369,54 @@ export default function SchoolWorkers() {
 }
 
 // ----------------------------------------------------------------------
-
+function applyFilter(products, sortBy, filters) {
+  // SORT BY
+  if (sortBy === 'featured') {
+    products = orderBy(products, ['sold'], ['desc']);
+  }
+  if (sortBy === 'newest') {
+    products = orderBy(products, ['createdAt'], ['desc']);
+  }
+  if (sortBy === 'priceDesc') {
+    products = orderBy(products, ['price'], ['desc']);
+  }
+  if (sortBy === 'priceAsc') {
+    products = orderBy(products, ['price'], ['asc']);
+  }
+  // FILTER PRODUCTS
+  if (filters.gender.length > 0) {
+    products = products.filter((product) => filters.gender.includes(product.gender));
+  }
+  if (filters.category !== 'All') {
+    products = products.filter((product) => product.category === filters.category);
+  }
+  if (filters.colors.length > 0) {
+    products = products.filter((product) => product.colors.some((color) => filters.colors.includes(color)));
+  }
+  if (filters.priceRange) {
+    products = products.filter((product) => {
+      if (filters.priceRange === 'below') {
+        return product.price < 25;
+      }
+      if (filters.priceRange === 'between') {
+        return product.price >= 25 && product.price <= 75;
+      }
+      return product.price > 75;
+    });
+  }
+  if (filters.rating) {
+    products = products.filter((product) => {
+      const convertRating = (value) => {
+        if (value === 'up4Star') return 4;
+        if (value === 'up3Star') return 3;
+        if (value === 'up2Star') return 2;
+        return 1;
+      };
+      return product.totalRating > convertRating(filters.rating);
+    });
+  }
+  return products;
+}
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;

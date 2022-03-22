@@ -65,7 +65,7 @@ const TABLE_HEAD = [
   { id: 'role', label: 'Role', alignRight: false },
   { id: 'isVerified', label: 'Verified', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 
 // ----------------------------------------------------------------------
@@ -145,23 +145,6 @@ export default function Workers() {
   const handleRemoveGender = (value) => {
     const newValue = filters.gender.filter((item) => item !== value);
     setValue('gender', newValue);
-  };
-
-  const handleRemoveCategory = () => {
-    setValue('category', 'All');
-  };
-
-  const handleRemoveColor = (value) => {
-    const newValue = filters.colors.filter((item) => item !== value);
-    setValue('colors', newValue);
-  };
-
-  const handleRemovePrice = () => {
-    setValue('priceRange', '');
-  };
-
-  const handleRemoveRating = () => {
-    setValue('rating', '');
   };
 
   const handleAddEvent = () => {

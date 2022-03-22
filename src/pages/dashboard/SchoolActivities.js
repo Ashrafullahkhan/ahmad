@@ -74,10 +74,9 @@ const selectedEventSelector = (state) => {
   return null;
 };
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nombre' },
-  { id: 'company', label: 'Trabajadores' },
-
-  { id: '', label: 'Function', align: 'center' },
+  { id: 'name', label: 'Nombre', alignRight: true },
+  { id: 'company', label: 'Trabajadores', alignRight: true },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 
 // ----------------------------------------------------------------------
@@ -313,14 +312,14 @@ export default function SchoolWorkers() {
                         <TableCell padding="checkbox">
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
-                        <TableCell sx={{ display: 'flex', alignItems: 'left' }}>
+                        <TableCell align="center">
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
                         </TableCell>
-                        <TableCell alignitems="left">{company}</TableCell>
+                        <TableCell align="center">{company}</TableCell>
 
-                        <TableCell alignitems="left">
+                        <TableCell sx={{ align: 'center', paddingLeft: 20 }}>
                           <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />
                         </TableCell>
                       </TableRow>

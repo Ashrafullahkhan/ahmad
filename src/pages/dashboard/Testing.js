@@ -45,7 +45,7 @@ const TABLE_HEAD_ACTIVITY = [
   { id: 'name', label: 'Nombre', alignRight: false },
   { id: 'company', label: 'Trabajadores', alignRight: false },
 
-  { id: '' },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 const TABLE_HEAD = [
   { id: 'name', label: 'Nombre', alignRight: false },
@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'role', label: 'Email', alignRight: false },
   { id: 'isVerified', label: 'Telefono', alignRight: false },
   { id: 'status', label: ' Estado', alignRight: false },
-  { id: '' },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 const TABLE_HEAD_KIDS = [
   { id: 'name', label: 'Nombre', alignRight: false },
@@ -61,7 +61,7 @@ const TABLE_HEAD_KIDS = [
   { id: 'role', label: 'Nombre tutor', alignRight: false },
   { id: 'isVerified', label: ' Email', alignRight: false },
   { id: 'status', label: 'Teléfono', alignRight: false },
-  { id: '' },
+  { id: '', label: 'Acción', alignRight: true },
 ];
 // ----------------------------------------------------------------------
 

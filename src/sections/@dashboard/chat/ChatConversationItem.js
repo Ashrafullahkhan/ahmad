@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { formatDistanceToNowStrict } from 'date-fns';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Avatar, ListItemText, ListItemAvatar, ListItemButton } from '@mui/material';
+import { Box, Avatar, ListItemText, ListItemAvatar, ListItemButton, Typography } from '@mui/material';
 //
 import BadgeStatus from '../../../components/BadgeStatus';
 
@@ -107,7 +107,9 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
               noWrap: true,
               variant: 'subtitle2',
             }}
-            secondary={details.displayText}
+            secondary={formatDistanceToNowStrict(new Date(displayLastActivity), {
+              addSuffix: false,
+            })}
             secondaryTypographyProps={{
               noWrap: true,
               variant: isUnread ? 'subtitle2' : 'body2',
@@ -135,7 +137,9 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
             >
               {formatDistanceToNowStrict(new Date(displayLastActivity), {
                 addSuffix: false,
-              })}
+              }) === '2 minutes'
+                ? 'parents'
+                : 'worker'}
             </Box>
             {isUnread && <BadgeStatus status="unread" size="small" />}
           </Box>
