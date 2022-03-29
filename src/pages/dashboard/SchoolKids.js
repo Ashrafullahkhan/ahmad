@@ -4,6 +4,7 @@ import { Link as RouterLink, Link } from 'react-router-dom';
 import * as React from 'react';
 import orderBy from 'lodash/orderBy';
 // form
+import { ExcelExport } from '@progress/kendo-react-excel-export';
 import { useForm } from 'react-hook-form';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -87,7 +88,7 @@ export default function SchoolKids() {
   const theme = useTheme();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-
+  const _export = React.useRef(null);
   const isDesktop = useResponsive('up', 'sm');
   const [openFilter, setOpenFilter] = useState(false);
 
@@ -118,7 +119,11 @@ export default function SchoolKids() {
   const methods = useForm({
     defaultValues,
   });
-
+  const excelExport = () => {
+    if (_export.current !== null) {
+      _export.current.save();
+    }
+  };
   const { reset, watch, setValue } = methods;
 
   const values = watch();
@@ -179,7 +184,8 @@ export default function SchoolKids() {
     setSelected([]);
   };
 
-  const handleClick = (name) => {
+  const handleClick = (e, name) => {
+    e.stopPropagation();
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
     if (selectedIndex === -1) {
@@ -219,8 +225,9 @@ export default function SchoolKids() {
     setPage(0);
   };
 
-  const handleDeleteUser = (userId) => {
+  const handleDeleteUser = (e, userId) => {
     const deleteUser = userList.filter((user) => user.id !== userId);
+    e.stopPropagation();
     setSelected([]);
     setUserList(deleteUser);
   };
@@ -296,6 +303,13 @@ export default function SchoolKids() {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
+                <button
+                  title="Export Excel"
+                  className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+                  onClick={excelExport}
+                >
+                  Export to Excel
+                </button>
                 <UserListHead
                   order={order}
                   orderBy={orderBy}
@@ -311,42 +325,41 @@ export default function SchoolKids() {
                     const isItemSelected = selected.indexOf(name) !== -1;
 
                     return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Typography variant="subtitle2" noWrap>
-                            {name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'banned' && 'error') || 'success'}
-                          >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
+                      <ExcelExport data={userList} ref={_export}>
+                        <TableRow
+                          onClick={handleAddEvent}
+                          hover
+                          key={id}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={isItemSelected} onClick={(e) => handleClick(e, name)} />
+                          </TableCell>
+                          <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="subtitle2" noWrap>
+                              {name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="left">{company}</TableCell>
+                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">
+                            <Label
+                              variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+                              color={(status === 'banned' && 'error') || 'success'}
+                            >
+                              {sentenceCase(status)}
+                            </Label>
+                          </TableCell>
 
-                        <TableCell align="right">
-                          <UserMoreMenu
-                            onClick={handleAddEvent}
-                            onDelete={() => handleDeleteUser(id)}
-                            userName={name}
-                          />
-                        </TableCell>
-                      </TableRow>
+                          <TableCell align="right">
+                            <UserMoreMenu onDelete={(e) => handleDeleteUser(e, id)} userName={name} />
+                          </TableCell>
+                        </TableRow>
+                      </ExcelExport>
                     );
                   })}
                   {emptyRows > 0 && (

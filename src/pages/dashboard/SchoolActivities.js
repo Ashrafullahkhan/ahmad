@@ -312,12 +312,14 @@ export default function SchoolWorkers() {
                         <TableCell padding="checkbox">
                           <Checkbox checked={isItemSelected} onClick={() => handleClick(name)} />
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell style={{ paddingLeft: '5%' }} align="left">
                           <Typography variant="subtitle2" noWrap>
                             {name}
                           </Typography>
                         </TableCell>
-                        <TableCell align="center">{company}</TableCell>
+                        <TableCell style={{ paddingLeft: '9%' }} align="left">
+                          {company}
+                        </TableCell>
 
                         <TableCell sx={{ align: 'center', paddingLeft: 20 }}>
                           <UserMoreMenu onClick={handleAddView} onDelete={() => handleDeleteUser(id)} userName={name} />

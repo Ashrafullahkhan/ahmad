@@ -49,6 +49,8 @@
     "@mui/lab": "^5.0.0-alpha.60",
     "@mui/material": "^5.2.4",
     "@mui/x-data-grid": "^5.2.1",
+    "@progress/kendo-licensing": "^1.2.2",
+    "@progress/kendo-react-excel-export": "^5.1.0",
     "@react-pdf/renderer": "^2.0.21",
     "@reduxjs/toolkit": "^1.7.1",
     "@turf/bbox": "^6.5.0",
